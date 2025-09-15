@@ -1,0 +1,20 @@
+!!!!!!!!!
+git fetch origin
+git checkout develop
+
+
+git branch                       # Liste les branches locales
+git branch -r                   # Liste les branches distantes
+git branch -a                   # Toutes les branches
+
+git checkout -b nom_branche     # Créer + changer de branche
+git switch -c nom_branche       # Idem (plus moderne)
+git switch nom_branche          # Changer de branche
+
+git branch -d nom_branche       # Supprimer branche locale (si mergée)
+git branch -D nom_branche       # Supprimer branche locale (forcé)
+git push origin --delete nom_branche  # Supprimer branche distante
+🔄 Synchroniser avec le dépôt distant
+
+git init                        # Initialiser un nouveau dépôt
+git remote add origin URL       # Lier à un dépôt distant
