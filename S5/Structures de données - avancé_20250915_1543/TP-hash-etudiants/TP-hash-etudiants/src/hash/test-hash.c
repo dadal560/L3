@@ -79,6 +79,7 @@ main()
     c2.def = malloc(10);
     strcpy(c2.mot, "mot2");
     strcpy(c2.def, "def2");
+    hashtable_apply(table, mon_print, stdout);
     hashtable_insert(&table, &c2, mon_delete);
 	hashtable_print(table, mon_print, stdout);
     printf("----------\n");

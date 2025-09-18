@@ -142,9 +142,9 @@ hashtable_print(HashTable * table, void (*print) (void *, FILE *), FILE * stream
 void
 hashtable_delete(HashTable * table, void (*delete) (void *))
 {
-    // A COMPLETER (supprime tous les elements de la tale)
+    // Supprime tous les éléments de la table
     for (size_t i = 0; i < table->length; i++) {
-        list_delete(table->list[i], delete);
+        list_delete(&table->list[i], delete);
     }
     free(table);
 }
@@ -166,13 +166,25 @@ hashtable_insert(HashTable ** ptable, void *data, void (*delete) (void *))
 int
 hashtable_retract(HashTable ** ptable, void *data, void (*delete) (void *))
 {
-        // A COMPLETER (supprime une element d'une table)
-    return 0;
+    // Supprime un élément de la table
+    HashTable *table = *ptable;
+    size_t idx = table->hash(data, table->length);
+    int index = list_index_data(table->list[idx], data, table->compare);
+    int res = 0;
+    if (index != -1) {
+        res = list_remove_nth(&table->list[idx], (size_t)index, delete);
+        if (res) {
+            table->nb--;
+            _hashtable_resize(ptable);
+        }
+    }
+    return res;
 }
 
 void               *
 hashtable_lookup(HashTable * table, void *data)
 {
-        // A COMPLETER  (recherche d'un element dans une table)
-
+    // Recherche d'un élément dans la table
+    size_t idx = table->hash(data, table->length);
+    return list_find_data(table->list[idx], data, table->compare);
 }
