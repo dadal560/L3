@@ -160,7 +160,7 @@ hashtable_insert(HashTable ** ptable, void *data, void (*delete) (void *))
         table->nb++;
         _hashtable_resize(ptable);
     }
-    return idx;
+    return res;
 }
 
 int
