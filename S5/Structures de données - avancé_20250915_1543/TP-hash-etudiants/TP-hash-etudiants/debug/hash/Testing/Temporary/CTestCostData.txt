@@ -1,0 +1,4 @@
+test-hash[valgrind] 0 0
+test-hash[normal] 1 0.00158337
+---
+test-hash[valgrind]

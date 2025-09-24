@@ -1,0 +1,190 @@
+#include "hash.h"
+//#include "hash.inc"
+#include <stdlib.h>
+#include <stdbool.h>   
+#include <string.h> 
+
+const static size_t hashtable_primes[] =
+{
+ 11,
+ 19,
+ 37,
+ 73,
+ 109,
+ 163,
+ 251,
+ 367,
+ 557,
+ 823,
+ 1237,
+ 1861,
+ 2777,
+ 4177,
+ 6247,
+ 9371,
+ 14057,
+ 21089,
+ 31627,
+ 47431,
+ 71143,
+ 106721,
+ 160073,
+ 240101,
+ 360163,
+ 540217,
+ 810343,
+ 1215497,
+ 1823231,
+ 2734867,
+ 4102283,
+ 6153409,
+ 9230113,
+ 13845163,
+};
+static const double HASHTABLE_MIN_COLLISIONS = 0.3;
+static const double HASHTABLE_MAX_COLLISIONS = 3.0;
+
+static const size_t HASHTABLE_NB_PRIMES = sizeof(hashtable_primes) / sizeof(size_t);
+
+#define HASHTABLE_MIN_SIZE hashtable_primes[0]
+#define HASHTABLE_MAX_SIZE hashtable_primes[HASHTABLE_NB_PRIMES - 1]
+
+static HashTable   *
+_hashtable_new(size_t length, size_t size, size_t(*hash) (const void *, size_t), int (*compare) (const void *, const void *))
+{
+    HashTable *table = (HashTable *) malloc(sizeof(size_t) * 3 + 2 * sizeof(void *) + sizeof(List) * length);
+
+    if (table) {
+        size_t              i;
+
+        table->hash = hash;
+        table->compare = compare;
+        table->length = length;
+        table->nb = 0;
+        table->size = size;
+        for (i = 0; i < length; i++) {
+            table->list[i] = NULL;
+        }
+    }
+    return table;
+
+}
+
+
+
+
+HashTable          *
+hashtable_new(size_t size, size_t(*hash) (const void *, size_t), int (*compare) (const void *, const void *))
+{
+    return _hashtable_new(HASHTABLE_MIN_SIZE, size, hash, compare);
+}
+
+static void
+_hashtable_resize(HashTable ** ptable)
+{
+    double              ratio = (*ptable)->nb / (double)(*ptable)->length;
+
+    if ((*ptable)->nb >= HASHTABLE_MIN_SIZE &&
+        (*ptable)->nb <= HASHTABLE_MAX_SIZE &&
+    (ratio > HASHTABLE_MAX_COLLISIONS || ratio < HASHTABLE_MIN_COLLISIONS)) {
+        size_t              i = 1;
+        HashTable          *new;
+
+        while (hashtable_primes[i] < (*ptable)->nb)
+            i++;
+
+        new = _hashtable_new(hashtable_primes[i],
+                             (*ptable)->size,
+                             (*ptable)->hash,
+                             (*ptable)->compare);
+
+        if (new) {
+            size_t              j;
+
+            new->nb = (*ptable)->nb;
+            for (j = 0; j < (*ptable)->length; j++) {
+                List                list = (*ptable)->list[j], next;
+
+                while (list) {
+                    size_t              h = new->hash(list->data, new->length);
+
+                    next = list->next;
+                    list->next = new->list[h];
+                    new->list[h] = list;
+                    list = next;
+                }
+            }
+            free(*ptable);
+            *ptable = new;
+        }
+    }
+}
+
+
+void
+hashtable_apply(HashTable * table, void (*func) (void *, void *), void *extra_data)
+{
+   // A COMPLETER (applique la fonction func sur tous les elements de la table en utilisant extra_data
+    for(size_t i=0 ; i<table->length ; i++) {
+        list_foreach(table->list[i], func, extra_data);
+    }
+}
+
+void
+hashtable_print(HashTable * table, void (*print) (void *, FILE *), FILE * stream)
+{
+    // A COMPLETER ( ecrit la table dans un fichier .. )
+    for (size_t i = 0; i < table->length; i++) {
+        list_foreach(table->list[i], print, stream);
+    }
+}
+
+void
+hashtable_delete(HashTable * table, void (*delete) (void *))
+{
+    // Supprime tous les éléments de la table
+    for (size_t i = 0; i < table->length; i++) {
+        list_delete(&table->list[i], delete);
+    }
+    free(table);
+}
+
+int
+hashtable_insert(HashTable ** ptable, void *data, void (*delete) (void *))
+{
+    // A COMPLETER (insere une element dans une table)
+    HashTable *table = *ptable; 
+    size_t idx = table->hash(data, table->length);
+    int res = list_prepend(&table->list[idx], data, table->size);
+    if (res) {
+        table->nb++;
+        _hashtable_resize(ptable);
+    }
+    return res;
+}
+
+int
+hashtable_retract(HashTable ** ptable, void *data, void (*delete) (void *))
+{
+    // Supprime un élément de la table
+    HashTable *table = *ptable;
+    size_t idx = table->hash(data, table->length);
+    int index = list_index_data(table->list[idx], data, table->compare);
+    int res = 0;
+    if (index != -1) {
+        res = list_remove_nth(&table->list[idx], (size_t)index, delete);
+        if (res) {
+            table->nb--;
+            _hashtable_resize(ptable);
+        }
+    }
+    return res;
+}
+
+void               *
+hashtable_lookup(HashTable * table, void *data)
+{
+    // Recherche d'un élément dans la table
+    size_t idx = table->hash(data, table->length);
+    return list_find_data(table->list[idx], data, table->compare);
+}

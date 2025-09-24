@@ -1,0 +1,11 @@
+#!/bin/bash
+
+ip addr flush dev eth0
+ifconfig eth0 192.168.1.1/24
+
+# Passerelle par défaut = routeur
+route add default gw 192.168.1.254
+
+# DNS
+echo "nameserver 10.192.10.10" > /etc/resolv.conf
+

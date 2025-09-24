@@ -1,0 +1,93 @@
+Start testing: Sep 18 12:38 CEST
+----------------------------------------------------------
+1/2 Testing: test-hash[valgrind]
+1/2 Test: test-hash[valgrind]
+Command: "/usr/bin/valgrind" "--leak-check=full" "--quiet" "--error-exitcode=1" "./test-hash"
+Directory: /home/henry/Bureau/L3/S5/Structures de données - avancé_20250915_1543/TP-hash-etudiants/TP-hash-etudiants/debug/hash
+"test-hash[valgrind]" start time: Sep 18 12:38 CEST
+Output:
+----------------------------------------------------------
+----------
+Insertion manuelle de c1 dans la table (sans hashtable_insert)
+After manual insertion of c1:
+[DEBUG] Appel de hashtable_apply
+mot1:def1
+----------
+[DEBUG] Appel de hashtable_apply
+mot1:def1
+mot2:def2
+----------
+[DEBUG] Appel de hashtable_apply
+mot1:def1
+mot2:def2
+mot3:def3
+----------
+[DEBUG] Appel de hashtable_apply
+mot1:def1
+mot2:def2
+mot3:def3
+mot4:def4
+----------
+[DEBUG] Appel de hashtable_apply
+mot1:def1
+mot2:def2
+mot3:def3
+mot4:def4
+----------
+==35253== 304 (128 direct, 176 indirect) bytes in 1 blocks are definitely lost in loss record 13 of 13
+==35253==    at 0x4846828: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==35253==    by 0x485B1A8: _hashtable_new (hash.c:55)
+==35253==    by 0x485B253: hashtable_new (hash.c:79)
+==35253==    by 0x1093F9: main (test-hash.c:60)
+==35253== 
+<end of output>
+Test time =   0.37 sec
+----------------------------------------------------------
+Test Failed.
+"test-hash[valgrind]" end time: Sep 18 12:38 CEST
+"test-hash[valgrind]" time elapsed: 00:00:00
+----------------------------------------------------------
+
+2/2 Testing: test-hash[normal]
+2/2 Test: test-hash[normal]
+Command: "/home/henry/Bureau/L3/S5/Structures de données - avancé_20250915_1543/TP-hash-etudiants/TP-hash-etudiants/debug/hash/test-hash"
+Directory: /home/henry/Bureau/L3/S5/Structures de données - avancé_20250915_1543/TP-hash-etudiants/TP-hash-etudiants/debug/hash
+"test-hash[normal]" start time: Sep 18 12:38 CEST
+Output:
+----------------------------------------------------------
+----------
+Insertion manuelle de c1 dans la table (sans hashtable_insert)
+After manual insertion of c1:
+[DEBUG] Appel de hashtable_apply
+mot1:def1
+----------
+[DEBUG] Appel de hashtable_apply
+mot1:def1
+mot2:def2
+----------
+[DEBUG] Appel de hashtable_apply
+mot1:def1
+mot2:def2
+mot3:def3
+----------
+[DEBUG] Appel de hashtable_apply
+mot1:def1
+mot2:def2
+mot3:def3
+mot4:def4
+----------
+[DEBUG] Appel de hashtable_apply
+mot1:def1
+mot2:def2
+mot3:def3
+mot4:def4
+----------
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"test-hash[normal]" end time: Sep 18 12:38 CEST
+"test-hash[normal]" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Sep 18 12:38 CEST
