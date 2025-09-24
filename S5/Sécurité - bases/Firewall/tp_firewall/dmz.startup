@@ -1,0 +1,7 @@
+#!/bin/bash
+ip addr flush dev eth0
+ip addr add 10.192.10.10/24 dev eth0
+
+# Route vers le réseau du client via le routeur
+ip route add 192.168.1.0/24 via 10.192.10.254
+
