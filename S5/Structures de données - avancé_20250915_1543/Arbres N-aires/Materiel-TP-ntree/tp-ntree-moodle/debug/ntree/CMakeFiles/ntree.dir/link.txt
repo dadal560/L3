@@ -1,0 +1,1 @@
+/usr/bin/cc -fPIC -g -shared -Wl,-soname,libntree.so -o libntree.so CMakeFiles/ntree.dir/ntree.c.o 

@@ -134,9 +134,7 @@ void
 hashtable_print(HashTable * table, void (*print) (void *, FILE *), FILE * stream)
 {
     // A COMPLETER ( ecrit la table dans un fichier .. )
-    for (size_t i = 0; i < table->length; i++) {
-        list_foreach(table->list[i], print, stream);
-    }
+    hashtable_apply(table, (void (*) (void *, void *))print, stream);
 }
 
 void
