@@ -69,6 +69,12 @@ void *ntree_get_data(NTree tree) {
 }
 //----------------------------------------
 
+NTree ntree_get_nth(NTree tree, size_t nth) {
+    if(!tree || nth >= tree->arity) {
+        return NULL;
+    }
+    return tree->subtrees[nth];
+}
 
 bool ntree_set_nth(NTree tree, NTree sub, size_t nth, void (*deletef) (void *)) {
  if (!tree) {
@@ -123,7 +129,7 @@ size_t ntree_height(NTree tree) {
         return max_height + 1;
     }
     else
-        return false;
+        return 0;
 }
 //----------------------------------------
 
@@ -137,7 +143,7 @@ size_t ntree_size(NTree tree) {
         return size;
     }
     else
-        return false;
+        return 0;
 }
 
 

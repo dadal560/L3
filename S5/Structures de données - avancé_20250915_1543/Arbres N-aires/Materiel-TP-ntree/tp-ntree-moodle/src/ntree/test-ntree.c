@@ -97,7 +97,7 @@ void testArbresNAires(void){
     printf("\nTri in-order : \n");
     ntree_in_order(racine, monPrintF, NULL, 3);
     
-    // Mes tests
+    // tests
     
     // Nouvel arbre avec la valeur 20
     NTree new5 = ntree_create(&m, sizeInt, 2);

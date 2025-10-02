@@ -34,7 +34,6 @@ NTree ntree_get_nth (NTree tree, size_t nth);
 
 void *ntree_get_data (NTree tree);
 
-// Modifié : voir README.txt
 bool ntree_set_nth (NTree tree, NTree sub, size_t nth, void (*deletef) (void *));
 
 bool ntree_set_data (NTree tree, const void *data,
