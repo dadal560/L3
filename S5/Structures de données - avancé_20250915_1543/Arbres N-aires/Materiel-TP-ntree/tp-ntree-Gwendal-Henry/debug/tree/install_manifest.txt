@@ -1,0 +1,4 @@
+/home/henry/Bureau/L3/S5/Structures de données - avancé_20250915_1543/Arbres N-aires/Materiel-TP-ntree/tp-ntree-Gwendal-Henry/debug/tmp/lib/libtree.so
+/home/henry/Bureau/L3/S5/Structures de données - avancé_20250915_1543/Arbres N-aires/Materiel-TP-ntree/tp-ntree-Gwendal-Henry/debug/tmp/include/tree.h
+/home/henry/Bureau/L3/S5/Structures de données - avancé_20250915_1543/Arbres N-aires/Materiel-TP-ntree/tp-ntree-Gwendal-Henry/debug/tmp/share/pkgconfig/tree.pc
+/home/henry/Bureau/L3/S5/Structures de données - avancé_20250915_1543/Arbres N-aires/Materiel-TP-ntree/tp-ntree-Gwendal-Henry/debug/tmp/cmake/TreeConfig.cmake
