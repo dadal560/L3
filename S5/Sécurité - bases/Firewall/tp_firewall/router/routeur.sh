@@ -12,7 +12,7 @@ iptables -P OUTPUT DROP
 # ICMP (ping)
 iptables -A INPUT -p icmp -j ACCEPT
 iptables -A OUTPUT -p icmp -j ACCEPT
-iptables -A FORWARD -p icmp -j ACCEPT
+
 
 # SSH autorisé seulement depuis le client
 iptables -A INPUT -p tcp --dport 22 -s 192.168.1.1 -j ACCEPT
