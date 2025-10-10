@@ -304,11 +304,6 @@ bool tree_insert_avl(Tree *ptree, const void *data, int size, int (*compare)(con
 
 /**
  * Recherche un élément dans un arbre AVL.
- * 
- * @param root     Pointeur sur la racine de l’arbre.
- * @param data     Pointeur sur la valeur recherchée.
- * @param compare  Fonction de comparaison (retourne <0, 0 ou >0).
- * @return         Pointeur vers le nœud trouvé ou NULL si absent.
  */
 Tree tree_search_avl(Tree root, const void *data, int (*compare)(const void *, const void *)) {
     // Parcours récursif ou itératif (ici récursif)
@@ -398,7 +393,6 @@ static Tree rotate_left(Tree A) {
     int oldBalA = A->balance;
     int oldBalB = B->balance;
     
-    // Réorganisation des pointeurs
     A->right = B->left;
     if (B->left) B->left->parent = A;
 
@@ -423,7 +417,6 @@ static Tree rotate_right(Tree A) {
     int oldBalA = A->balance;
     int oldBalB = B->balance;
     
-    // Réorganisation des pointeurs
     A->left = B->right;
     if (B->right) B->right->parent = A;
 
