@@ -5,6 +5,11 @@
 #include <stdbool.h>
 #include "min-max.h"
 
+static Tree rotate_left(Tree A);
+static Tree rotate_right(Tree A);
+static void tree_update_balance(Tree node);
+static Tree tree_balance(Tree root);
+
 /*--------------------------------------------------------------------*/
 Tree
 tree_new ()
@@ -266,7 +271,11 @@ compare))
 
 //Fonctions AVL
 
+/**
+ * Insère une valeur dans l'arbre AVL et rééquilibre si nécessaire.
+ */
 bool tree_insert_avl(Tree *ptree, const void *data, int size, int (*compare)(const void *, const void *)) {
+    // Cas de base : création du premier nœud
     if (*ptree == NULL) {
         Tree new_node = tree_create(data, size);
         if (new_node == NULL) {
@@ -276,36 +285,67 @@ bool tree_insert_avl(Tree *ptree, const void *data, int size, int (*compare)(con
         return true;
     }
 
+    // Insertion récursive dans la branche gauche ou droite
     int cmp = compare(data, (*ptree)->data);
     if (cmp < 0) {
-        if (!tree_insert_avl(&(*ptree)->left, data, size, compare)) {
-            return false;
-        }
+        if (!tree_insert_avl(&(*ptree)->left, data, size, compare)) return false;
         if ((*ptree)->left) (*ptree)->left->parent = *ptree;
     } else if (cmp > 0) {
-        if (!tree_insert_avl(&(*ptree)->right, data, size, compare)) {
-            return false;
-        }
+        if (!tree_insert_avl(&(*ptree)->right, data, size, compare)) return false;
         if ((*ptree)->right) (*ptree)->right->parent = *ptree;
     }
 
+    // Mise à jour de la balance et rééquilibrage
     tree_update_balance(*ptree);
     *ptree = tree_balance(*ptree);
 
     return true;
 }
 
-Tree
-tree_delete_avl(Tree root,
-                  const void *data,
-                  int (*compare) (const void *, const void *),
-                  void (*delete) (void *))
+/**
+ * Recherche un élément dans un arbre AVL.
+ * 
+ * @param root     Pointeur sur la racine de l’arbre.
+ * @param data     Pointeur sur la valeur recherchée.
+ * @param compare  Fonction de comparaison (retourne <0, 0 ou >0).
+ * @return         Pointeur vers le nœud trouvé ou NULL si absent.
+ */
+Tree tree_search_avl(Tree root, const void *data, int (*compare)(const void *, const void *)) {
+    // Parcours récursif ou itératif (ici récursif)
+    if (root == NULL) {
+        return NULL; // Élément non trouvé
+    }
+
+    int cmp = compare(data, root->data);
+
+    if (cmp == 0) {
+        // Élément trouvé
+        return root;
+    } else if (cmp < 0) {
+        // Recherche dans le sous-arbre gauche
+        return tree_search_avl(root->left, data, compare);
+    } else {
+        // Recherche dans le sous-arbre droit
+        return tree_search_avl(root->right, data, compare);
+    }
+}
+
+
+/**
+ * Supprime une valeur de l'arbre AVL et rééquilibre l’arbre si besoin.
+ */
+Tree tree_delete_avl(Tree root,
+                     const void *data,
+                     int (*compare)(const void *, const void *),
+                     void (*delete)(void *))
 {
     if (root == NULL) {
         return root; // Élément non trouvé
     }
 
     int cmp = compare(data, root->data);
+
+    // Recherche récursive de la valeur à supprimer
     if (cmp < 0) {
         root->left = tree_delete_avl(root->left, data, compare, delete);
         if (root->left) root->left->parent = root;
@@ -314,102 +354,118 @@ tree_delete_avl(Tree root,
         if (root->right) root->right->parent = root;
     } else {
         // Nœud trouvé
-        if (delete) {
-            delete(root->data);
-        }
+        if (delete) delete(root->data);
 
+        // Cas 1 : aucun enfant
+        // Cas 2 : un seul enfant
         if (root->left == NULL || root->right == NULL) {
             Tree temp = root->left ? root->left : root->right;
             if (temp == NULL) {
-                // Pas d'enfant
                 free(root);
                 return NULL;
             } else {
-                // Un enfant
                 temp->parent = root->parent;
                 free(root);
                 return temp;
             }
         } else {
-            // Deux enfants : trouver le successeur inorder
+            // Cas 3 : deux enfants
+            // On prend le successeur (le plus petit dans le sous-arbre droit)
             Tree successor = root->right;
             while (successor->left != NULL) {
                 successor = successor->left;
             }
-            memcpy(root->data, successor->data, sizeof(root->data)); // Copier les données du successeur
+            // On copie la valeur du successeur
+            memcpy(root->data, successor->data, sizeof(int));
+            // On supprime ensuite le successeur
             root->right = tree_delete_avl(root->right, successor->data, compare, delete);
             if (root->right) root->right->parent = root;
         }
     }
 
+    // Mise à jour et rééquilibrage après suppression
     tree_update_balance(root);
     return tree_balance(root);
 }
 
+/**
+ * Rotation gauche pour rééquilibrer après une insertion ou suppression.
+ */
+static Tree rotate_left(Tree A) {
+    if (!A || !A->right) return A;
+    
+    Tree B = A->right;
+    int oldBalA = A->balance;
+    int oldBalB = B->balance;
+    
+    // Réorganisation des pointeurs
+    A->right = B->left;
+    if (B->left) B->left->parent = A;
 
-// Met à jour la balance d'un nœud après insertion/suppression
-void tree_update_balance(Tree node) {
+    B->left = A;
+    B->parent = A->parent;
+    A->parent = B;
+    
+    // Mise à jour des balances
+    A->balance = oldBalA - 1 - MAX(oldBalB, 0);
+    B->balance = oldBalB - 1 + MIN(A->balance, 0);
+    
+    return B;
+}
+
+/**
+ * Rotation droite pour rééquilibrer après une insertion ou suppression.
+ */
+static Tree rotate_right(Tree A) {
+    if (!A || !A->left) return A;
+    
+    Tree B = A->left;
+    int oldBalA = A->balance;
+    int oldBalB = B->balance;
+    
+    // Réorganisation des pointeurs
+    A->left = B->right;
+    if (B->right) B->right->parent = A;
+
+    B->right = A;
+    B->parent = A->parent;
+    A->parent = B;
+    
+    // Mise à jour des balances
+    A->balance = oldBalA + 1 - MIN(oldBalB, 0);
+    B->balance = oldBalB + 1 + MAX(A->balance, 0);
+    
+    return B;
+}
+
+/**
+ * Met à jour le facteur de balance d’un nœud (hauteur droite - hauteur gauche).
+ */
+static void tree_update_balance(Tree node) {
     if (node) {
         int left_height = node->left ? tree_height(node->left) : 0;
         int right_height = node->right ? tree_height(node->right) : 0;
-        node->balance = right_height - left_height;  // Calcul de la balance
+        node->balance = right_height - left_height;
     }
 }
 
-// Équilibrer un nœud après insertion/suppression
-Tree tree_balance(Tree root) {
-    if (root->balance > 1) {  // Si la balance est supérieure à 1, rotation gauche nécessaire
-        if (root->right && root->right->balance < 0) {  // Si le sous-arbre droit est déséquilibré vers la gauche
-            root->right = rotate_right(root->right);  // Rotation droite du sous-arbre droit
+/**
+ * Rééquilibre l’arbre en appliquant les rotations nécessaires.
+ */
+static Tree tree_balance(Tree root) {
+    // Cas déséquilibre vers la droite
+    if (root->balance > 1) {
+        if (root->right && root->right->balance < 0) {
+            root->right = rotate_right(root->right);
         }
-        return rotate_left(root);  // Rotation gauche
-    } else if (root->balance < -1) {  // Si la balance est inférieure à -1, rotation droite nécessaire
-        if (root->left && root->left->balance > 0) {  // Si le sous-arbre gauche est déséquilibré vers la droite
-            root->left = rotate_left(root->left);  // Rotation gauche du sous-arbre gauche
+        return rotate_left(root);
+    }
+    // Cas déséquilibre vers la gauche
+    else if (root->balance < -1) {
+        if (root->left && root->left->balance > 0) {
+            root->left = rotate_left(root->left);
         }
-        return rotate_right(root);  // Rotation droite
+        return rotate_right(root);
     }
     return root;
-}
-
-// Rotation gauche autour d'un nœud
-Tree rotate_left(Tree root) {
-    if (!root || !root->right) {
-        return root;
-    }
-    Tree new_root = root->right;
-    root->right = new_root->left;
-
-    if (new_root->left) {
-        new_root->left->parent = root;
-    }
-    new_root->parent = root->parent;
-    new_root->left = root;
-    root->parent = new_root;
-
-    tree_update_balance(root);
-    tree_update_balance(new_root);
-
-    return new_root;
-}
-
-// Rotation droite autour d'un nœud
-Tree rotate_right(Tree root) {
-    if (!root || !root->left) {
-        return root;
-    }
-    Tree new_root = root->left;
-    root->left = new_root->right;
-
-    if (new_root->right) {
-        new_root->right->parent = root;
-    }
-    new_root->parent = root->parent;
-    new_root->right = root;
-    root->parent = new_root;
-
-    tree_update_balance(root);
-    tree_update_balance(new_root);
-
-    return new_root;
 }

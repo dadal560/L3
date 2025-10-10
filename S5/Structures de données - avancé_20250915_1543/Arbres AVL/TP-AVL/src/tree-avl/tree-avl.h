@@ -80,23 +80,11 @@ Tree tree_delete_avl(Tree root,
                  int (*compare) (const void *, const void *),
                  void (*delete) 
                  (void *));
-
-// Opération de recherche d’un élément dans un arbre AVL
-void *tree_search_avl(Tree tree,
-                      const void *data,
-                      int (*compare) (const void *, const void *));
-
-// Rotation gauche
-Tree rotate_left(Tree root);
-
-// Rotation droite
-Tree rotate_right(Tree root);
-
-// Double rotation gauche-droite
-void tree_update_balance(Tree node);
-
-// Met à jour la balance d'un nœud après insertion/suppression
-Tree tree_balance(Tree node);
+                
+// Opération de recherche dans un arbre AVL
+Tree tree_search_avl(Tree root,
+                     const void *data,
+                     int (*compare) (const void *, const void *));
                  
                      
 
