@@ -1,0 +1,4 @@
+ifconfig eth0 hw ether 00:02:05:00:00:01
+route add default gw 192.168.0.1
+dpkg -i /shared/lsof_4.95.0-1_amd64.deb
+dpkg -i /shared/nmap_7.94+git20230807.3be01efb1+dfsg-4_amd64.deb

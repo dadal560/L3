@@ -1,0 +1,1 @@
+/usr/bin/cc -g -rdynamic "CMakeFiles/test-ntree.dir/test-ntree.c.o" -o test-ntree  -Wl,-rpath,"/home/henry/Bureau/L3/S5/Structures de données - avancé_20250915_1543/Arbres N-aires/Materiel-TP-ntree/tp-ntree-Gwendal-Henry/debug/ntree" libntree.so 

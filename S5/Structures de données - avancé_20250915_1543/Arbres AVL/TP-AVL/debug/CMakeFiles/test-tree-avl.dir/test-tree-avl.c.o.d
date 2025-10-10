@@ -48,6 +48,9 @@ CMakeFiles/test-tree-avl.dir/test-tree-avl.c.o: \
  /usr/include/x86_64-linux-gnu/bits/types/FILE.h \
  /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h \
  /usr/include/x86_64-linux-gnu/bits/types/cookie_io_functions_t.h \
- /usr/include/x86_64-linux-gnu/bits/stdio_lim.h /usr/include/assert.h \
+ /usr/include/x86_64-linux-gnu/bits/stdio_lim.h /usr/include/string.h \
+ /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \
+ /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \
+ /usr/include/strings.h /usr/include/assert.h \
  /home/henry/Bureau/L3/S5/Structures\ de\ données\ -\ avancé_20250915_1543/Arbres\ AVL/TP-AVL/src/tree-avl/tree-avl.h \
  /usr/lib/gcc/x86_64-linux-gnu/13/include/stdbool.h

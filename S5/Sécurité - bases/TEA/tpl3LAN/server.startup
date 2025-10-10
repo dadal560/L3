@@ -1,0 +1,9 @@
+ifconfig eth0 192.168.0.2 netmask 255.255.255.0 broadcast 192.168.0.255
+route add default gw 192.168.0.1
+
+dpkg -i /shared/isc-dhcp-server_4.4.3-P1-2_amd64.deb
+dpkg -i /shared/dnsmasq-base_2.89-1_amd64.deb
+dpkg -i /shared/dnsmasq_2.89-1_all.deb
+dpkg -i /shared/lsof_4.95.0-1_amd64.deb
+
+/etc/init.d/dnsmasq start

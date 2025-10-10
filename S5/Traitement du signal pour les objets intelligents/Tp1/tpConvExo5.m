@@ -1,4 +1,4 @@
-close all
+    close all
 clear all
 f1 = 50;
 f2 = 300;
