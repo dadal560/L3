@@ -1,4 +1,0 @@
-/home/henry/Bureau/L3/S5/Structures de données - avancé_20250915_1543/Arbres AVL/TP-AVL/tmp/lib/libtree-avl.so
-/home/henry/Bureau/L3/S5/Structures de données - avancé_20250915_1543/Arbres AVL/TP-AVL/tmp/include/tree-avl.h
-/home/henry/Bureau/L3/S5/Structures de données - avancé_20250915_1543/Arbres AVL/TP-AVL/tmp/share/pkgconfig/tree-avl.pc
-/home/henry/Bureau/L3/S5/Structures de données - avancé_20250915_1543/Arbres AVL/TP-AVL/tmp/cmake/TreeConfig.cmake
