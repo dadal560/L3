@@ -1,1 +1,0 @@
-/usr/bin/cc -fPIC -g -shared -Wl,-soname,libtree.so -o libtree.so CMakeFiles/tree.dir/tree.c.o 
