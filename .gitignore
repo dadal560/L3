@@ -1,2 +1,7 @@
 **/debug/
 **/tmp/
+
+# Python
+**/*_env/   
+
+
