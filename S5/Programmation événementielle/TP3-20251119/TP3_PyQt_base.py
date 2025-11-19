@@ -1,5 +1,6 @@
 import sys
 from PyQt5.QtWidgets import *
+from PyQt5.QtCore import *
 from datetime import datetime
 
 
@@ -88,8 +89,21 @@ class MyMainWindow(QMainWindow):
     
     def myOpen(self):
         self.statusBar.showMessage("Histo-gram opened !")
-        filename = QFileDialog.getOpenFileName(self,"Open File", ".", "*.dat")
-        
+        fileName, ext = QFileDialog.getOpenFileName(self,"Open File", ".", "*.dat")
+        print(fileName)
+        if fileName:
+            file = QFile(fileName)
+            file.open(QIODevice.ReadOnly|QIODevice.Text)
+            while not file.atEnd():
+                line = file.readLine()
+                self.mHisto.m_list.append(int(line))
+                self.mHisto.m_size += 1
+                self.mHisto.m_max = max(self.mHisto.m_max, int(line))
+            print(self.mHisto.m_list)
+            print(self.mHisto.m_size)
+            print(self.mHisto.m_max)
+            file.close()
+
     def mySave(self):
         self.statusBar.showMessage("Histogram saved !")
 
