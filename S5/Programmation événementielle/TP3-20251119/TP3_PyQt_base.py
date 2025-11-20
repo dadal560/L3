@@ -62,6 +62,7 @@ class MyMainWindow(QMainWindow):
         
         self.bye = QAction(" &Bye", self)
         self.bye.setShortcut("Ctrl+B")
+        self.bye.triggered.connect(self.myExit)
         
         self.clear = QAction("&Clear", self)
         
@@ -108,10 +109,27 @@ class MyMainWindow(QMainWindow):
 
     def mySave(self):
         self.statusBar.showMessage("Histogram saved !")
+        fileName, ext = QFileDialog.getSaveFileName(self,"Save File", ".", "*.dat")
+        print(fileName)
+        if fileName:
+            file = QFile(fileName)
+            file.open(QIODevice.WriteOnly|QIODevice.Text)
+            for value in self.mHisto.m_list:
+                line = str(value) + '\n'
+                file.write(line.encode())
+            file.close()
 
     def myRestore(self):
         self.statusBar.showMessage("Histogram restored !")
+        self.mHisto.m_list = []
+        self.mHisto.m_size = 0
+        self.mHisto.m_max = 0
+        self.update()
         
+    def myBye(self):
+        self.statusBar.showMessage("Bye")
+        QApplication.quit()
+
     def paintEvent(self, event):
         if self.mHisto.m_size == 0:
             return
