@@ -1,6 +1,7 @@
 import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
+from PyQt5.QtGui import *
 from datetime import datetime
 
 
@@ -103,6 +104,7 @@ class MyMainWindow(QMainWindow):
             print(self.mHisto.m_size)
             print(self.mHisto.m_max)
             file.close()
+            self.update()
 
     def mySave(self):
         self.statusBar.showMessage("Histogram saved !")
@@ -110,6 +112,34 @@ class MyMainWindow(QMainWindow):
     def myRestore(self):
         self.statusBar.showMessage("Histogram restored !")
         
+    def paintEvent(self, event):
+        if self.mHisto.m_size == 0:
+            return
+
+        painter = QPainter(self)
+        painter.begin(self)
+        
+        painter.setBrush(QColor(Qt.red))
+        painter.setPen(Qt.black)             
+
+        w_fenetre = self.width()
+        h_fenetre = self.height()
+        
+
+        largeur_barre = int(w_fenetre / self.mHisto.m_size)
+
+        for i in range(self.mHisto.m_size):
+            valeur = self.mHisto.m_list[i]
+            
+            hauteur_barre = int((valeur / self.mHisto.m_max) * h_fenetre * 0.9)
+            
+            x = i * largeur_barre
+            
+            y = h_fenetre - hauteur_barre
+            
+            painter.drawRect(x, y, largeur_barre, hauteur_barre)
+
+        painter.end()        
 
     
 if __name__ == '__main__':
