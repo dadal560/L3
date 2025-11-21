@@ -17,7 +17,8 @@ class myHisto:
         self.m_list = []
         self.m_size = 0
         self.m_max = 0
-
+    def total(self):
+        return sum(self.m_list)
 
 
 class MyMainWindow(QMainWindow):
@@ -38,7 +39,11 @@ class MyMainWindow(QMainWindow):
 
         # Creation d'une instance de la classe myHisto
         self.mHisto = myHisto()
-    
+
+        self.doPaint = False
+
+        self.pie = False
+
         self.setAcceptDrops(True)
 
         self.histoColor= Qt.red
@@ -74,10 +79,17 @@ class MyMainWindow(QMainWindow):
         
         self.clear = QAction("&Clear", self)
         self.clear.setShortcut("Ctrl+C")
+        self.clear.triggered.connect(self.myClear)
 
         self.color = QAction("&Color", self)
         self.color.setIcon(QIcon(self.colorIcon))
         self.color.triggered.connect(self.myColor)
+
+        self.bar = QAction("&Bar", self)
+        self.bar.triggered.connect(self.myBar)
+        self.pie = QAction("&Pie", self)
+        self.pie.triggered.connect(self.myPie)
+
 
     def createMenus(self):
         """ Créer ici les menu et les items de menu, à compléter"""
@@ -91,8 +103,24 @@ class MyMainWindow(QMainWindow):
         dislpayMenu =self.menuBar().addMenu("&Display")
         dislpayMenu.addAction(self.clear)
         dislpayMenu.addAction(self.color)
-        
+
+        draw = self.menuBar().addMenu("Draw")
+        draw.addAction(self.bar)
+        draw.addAction(self.pie)
+
+    def myBar(self):
+        self.statusBar.showMessage("Bar !")
+        self.pie = False
+        self.doPaint = True
+        self.update()
     
+    def myPie(self):
+        self.statusBar.showMessage("Pie !")
+        self.pie = True
+        self.doPaint = True
+        self.resize(500, 500)
+        self.update()
+
     def myOpen(self):
         self.statusBar.showMessage("Histo-gram opened !")
         fileName, ext = QFileDialog.getOpenFileName(self,"Open File", ".", "*.dat")
@@ -110,6 +138,7 @@ class MyMainWindow(QMainWindow):
             self.mHisto.m_list = pickle.load(file)
             self.mHisto.m_size = len(self.mHisto.m_list)
             self.mHisto.m_max = max(self.mHisto.m_list)
+            self.doPaint = True
             self.update()
     
     def myBye(self):
@@ -121,6 +150,7 @@ class MyMainWindow(QMainWindow):
         self.mHisto.m_list = []
         self.mHisto.m_size = 0
         self.mHisto.m_max = 0
+        self.doPaint = False
         self.update()
         
     def myColor(self):
@@ -130,6 +160,7 @@ class MyMainWindow(QMainWindow):
             self.histoColor= color
             self.colorIcon.fill(color)
             self.color.setIcon(QIcon(self.colorIcon))
+            self.doPaint = True
             self.update()
 
     def lectureFichier(self,fileName):
@@ -145,6 +176,7 @@ class MyMainWindow(QMainWindow):
                 self.mHisto.m_size += 1
                 self.mHisto.m_max = max(self.mHisto.m_max, int(line))
             file.close()
+            self.doPaint = True
             self.update()
     
     def dragEnterEvent(self, event):
@@ -162,39 +194,57 @@ class MyMainWindow(QMainWindow):
             self.mHisto.m_list = []
             self.mHisto.m_size = 0
             self.mHisto.m_max = 0
-            for i in range(9):
+            for i in range(10):
                 self.mHisto.m_list.append(random.randint(0,99))
                 self.mHisto.m_size+=1
                 self.mHisto.m_max = max(self.mHisto.m_max,  self.mHisto.m_list[i])
+            self.doPaint = True
             self.update()
 
     def paintEvent(self, event):
-        if self.mHisto.m_list:
+        if self.doPaint:
 
             painter = QPainter(self)
             painter.begin(self)
 
             painter.setBrush(QColor(self.histoColor))
             
-            painter.setPen(Qt.black)             
-
+            painter.setPen(Qt.black)
             w = self.width()
             h = self.height()
-            
-            
 
-            largeur_barre = int(w / self.mHisto.m_size)
+            if self.pie == True:
+                if self.mHisto.total() == 0:
+                    painter.end()
+                    return
+                total = self.mHisto.total()
+                if total > 0:
+                    rect = QRect(w/4,h/4,min(w,h)/2,min(w,h)/2)
+                    startAngle = 0
+                    for val in self.mHisto.m_list:
+                        spanAngle = ((val / total) * 360.0)*16
+                       
 
-            for i in range(self.mHisto.m_size):
-                
-                hauteur_barre = int((self.mHisto.m_list[i] / self.mHisto.m_max) * h)
-                
-                x = i * largeur_barre
-                
-                y = h - (hauteur_barre+self.statusBar.height())
-                
-                painter.drawRect(x, y, largeur_barre, hauteur_barre)
+                        r = QRandomGenerator.global_().generate() % 256
+                        g = QRandomGenerator.global_().generate() % 256
+                        b = QRandomGenerator.global_().generate() % 256
+                        painter.setBrush(QColor(r, g, b))
 
+                        painter.drawPie(rect, startAngle, spanAngle)
+                        startAngle += spanAngle
+            else:
+                
+                largeur_barre = int(w / self.mHisto.m_size)
+
+                for i in range(self.mHisto.m_size):
+                    
+                    hauteur_barre = int((self.mHisto.m_list[i] / self.mHisto.m_max) * h)
+                    
+                    x = i * largeur_barre
+                    
+                    y = h - (hauteur_barre+self.statusBar.height())
+                    
+                    painter.drawRect(x, y, largeur_barre, hauteur_barre)
             painter.end()        
 
 if __name__ == '__main__':
