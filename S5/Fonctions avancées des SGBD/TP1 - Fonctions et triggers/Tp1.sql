@@ -26,3 +26,21 @@ END; $$ LANGUAGE plpgsql;
 
 SELECT afficher_mots('Test de la focntion afficher_mots');
 
+/*Exercice 3.*/
+CREATE OR REPLACE FUNCTION factorielle_iterative(a INTEGER)
+RETURNS INTEGER AS $$
+DECLARE
+    resultat INTEGER := 1;
+    i INTEGER;
+BEGIN
+    IF a<2 THEN
+        RETURN a;
+    ELSE
+        FOR i IN 2..a LOOP
+            resultat := resultat * i;
+        END LOOP;
+        RETURN resultat;
+    END IF;
+END; $$ LANGUAGE plpgsql;
+
+SELECT factorielle_iterative(5);
