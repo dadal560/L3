@@ -44,3 +44,28 @@ BEGIN
 END; $$ LANGUAGE plpgsql;
 
 SELECT factorielle_iterative(5);
+
+/*Exercice 4.*/
+/*a)*/
+SELECT SUM(duree) FROM films;
+
+/*b)*/
+CREATE OR REPLACE FUNCTION somme_duree_films() 
+RETURNS INTEGER AS $$
+DECLARE
+    total INTEGER := 0;      
+    x RECORD;              
+BEGIN
+    FOR x IN SELECT * FROM films LOOP
+        total := total + x.duree;
+    END LOOP;
+    RETURN total;
+END; 
+$$ LANGUAGE plpgsql;
+
+SELECT somme_duree_films();
+
+/*Exercice 5.*/
+SELECT AVG(prixAchat) FROM DVD INNER JOIN films ON DVD.titre = films.titre;
+
+CREATE OR REPLACE FUNCTION prix_moyen_films()
