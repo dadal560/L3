@@ -1,7 +1,6 @@
 import sys
 from PyQt5.QtWidgets import *
-
-
+import MyComponents.MyWidget_exo1 as exo1
 class MyImageViewerWidget(QFrame):
 
     def __init__(self, *args):
@@ -37,5 +36,9 @@ class MyMainWindow(QMainWindow):
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     w = MyMainWindow()
+    Form = exo1.QtWidgets.QWidget()
+    ui = exo1.Ui_Form()
+    ui.setupUi(Form)
+    Form.show()
     w.show()
     app.exec_()
