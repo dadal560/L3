@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'QtDesignerComponents/ComposantTP4.ui'
+# Form implementation generated from reading ui file 'ComposantTP4.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.11
 #
@@ -17,52 +17,18 @@ class Ui_Form(object):
         Form.resize(830, 612)
         self.mLabel = QtWidgets.QLabel(Form)
         self.mLabel.setEnabled(True)
-        self.mLabel.setGeometry(QtCore.QRect(10, 30, 640, 480))
-        self.mLabel.setMinimumSize(QtCore.QSize(640, 480))
+        self.mLabel.setGeometry(QtCore.QRect(140, 110, 300, 300))
+        self.mLabel.setMinimumSize(QtCore.QSize(300, 300))
         self.mLabel.setStyleSheet("background-color: green;")
         self.mLabel.setText("")
         self.mLabel.setObjectName("mLabel")
-        self.layoutWidget = QtWidgets.QWidget(Form)
-        self.layoutWidget.setGeometry(QtCore.QRect(680, 200, 141, 91))
-        self.layoutWidget.setObjectName("layoutWidget")
-        self.gridLayout = QtWidgets.QGridLayout(self.layoutWidget)
-        self.gridLayout.setContentsMargins(0, 0, 0, 0)
-        self.gridLayout.setObjectName("gridLayout")
-        self.mButtonN = QtWidgets.QPushButton(self.layoutWidget)
-        self.mButtonN.setObjectName("mButtonN")
-        self.gridLayout.addWidget(self.mButtonN, 0, 0, 1, 1)
-        self.mButtonP = QtWidgets.QPushButton(self.layoutWidget)
-        self.mButtonP.setObjectName("mButtonP")
-        self.gridLayout.addWidget(self.mButtonP, 1, 0, 1, 1)
-        self.layoutWidget1 = QtWidgets.QWidget(Form)
-        self.layoutWidget1.setGeometry(QtCore.QRect(10, 520, 641, 81))
-        self.layoutWidget1.setObjectName("layoutWidget1")
-        self.horizontalLayout = QtWidgets.QHBoxLayout(self.layoutWidget1)
-        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
-        self.horizontalLayout.setObjectName("horizontalLayout")
-        self.mLineEdit = QtWidgets.QLineEdit(self.layoutWidget1)
-        self.mLineEdit.setReadOnly(True)
-        self.mLineEdit.setObjectName("mLineEdit")
-        self.horizontalLayout.addWidget(self.mLineEdit)
-        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout.addItem(spacerItem)
-        self.mButtonBrowse = QtWidgets.QPushButton(self.layoutWidget1)
-        self.mButtonBrowse.setObjectName("mButtonBrowse")
-        self.horizontalLayout.addWidget(self.mButtonBrowse)
 
         self.retranslateUi(Form)
-        self.mButtonBrowse.clicked.connect(Form.LoadFiles) # type: ignore
-        self.mButtonN.clicked.connect(Form.Next) # type: ignore
-        self.mButtonP.clicked.connect(Form.Previous) # type: ignore
         QtCore.QMetaObject.connectSlotsByName(Form)
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Form"))
-        self.mButtonN.setText(_translate("Form", "Next"))
-        self.mButtonP.setText(_translate("Form", "Previous"))
-        self.mLineEdit.setText(_translate("Form", "Chemin vers l\'image chargée"))
-        self.mButtonBrowse.setText(_translate("Form", "..."))
 
 
 if __name__ == "__main__":
