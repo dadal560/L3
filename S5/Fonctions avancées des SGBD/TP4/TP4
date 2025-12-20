@@ -1,0 +1,17 @@
+CREATE TABLE test_selectivite AS
+ SELECT 
+    s as id, 
+    floor(random()*2)+1 as val_2,        
+    floor(random()*100)+1 as val_100,    
+    floor(random()*1000000)+1 as val_100k 
+ FROM generate_Series(1,1000000) s;
+
+CREATE INDEX idx_val2 ON test_selectivite(val_2);
+CREATE INDEX idx_val100 ON test_selectivite(val_100);
+CREATE INDEX idx_val100k ON test_selectivite(val_100k);
+
+ANALYZE test_selectivite;
+
+EXPLAIN ANALYZE SELECT * FROM test_selectivite WHERE val_2 = 1;
+EXPLAIN ANALYZE SELECT * FROM test_selectivite WHERE val_100 = 42;
+EXPLAIN ANALYZE SELECT * FROM test_selectivite WHERE val_100k = 5000;
