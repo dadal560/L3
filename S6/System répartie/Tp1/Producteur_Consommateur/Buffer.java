@@ -17,8 +17,8 @@ public class Buffer {
         this.buffer = new double[size];
 
     
-        this.vide = new Semaphore(size); // Initialisé à size (tout est vide au début)
-        this.plein = new Semaphore(0); // Initialisé à 0 (rien à lire)
+        this.vide = new Semaphore(size); // Initialisé à size 
+        this.plein = new Semaphore(0); // Initialisé à 0
         
         // initialisés à 1 
         this.mutexProd = new Semaphore(1);
@@ -28,12 +28,12 @@ public class Buffer {
     public void depot(double value) {
         vide.P();          // Attente d'une place libre
         
-        mutexProd.P();     // Exclusion mutuelle entre producteurs
+        mutexProd.P();     
         
         buffer[in] = value;
         in = (in + 1) % size; // Gestion circulaire 
         
-        mutexProd.V();     // Fin exclusion mutuelle producteurs
+        mutexProd.V();     
         
         plein.V();         // Signale qu'un message est disponible
     }
@@ -42,12 +42,12 @@ public class Buffer {
         double value = 0;
         plein.P();         // Attente d'un message
         
-        mutexConso.P();    // Exclusion mutuelle entre consommateurs
+        mutexConso.P();    
         
         value = buffer[out];
         out = (out + 1) % size; // Gestion circulaire 
         
-        mutexConso.V();    // Fin exclusion mutuelle consommateurs
+        mutexConso.V();   
         
         vide.V();          // Signale qu'une place est libérée
         return value;
